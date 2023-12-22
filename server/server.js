@@ -17,15 +17,25 @@ app.use(cors())
 
 // GET
 // write an endpoint so when we visit the root route '/' our server displays some text. 
-// request object, reponse object
+// request object, response object
 app.get('/', function(request, response) {
     response.json('	ᕕ(╭ರ╭ ͟ʖ╮•́)⊃¤=(————- This is the root route!')
 })
 
-app.get('/jokes', function(request, reponse) {
+app.get('/jokes', function(request, response) {
     const jokes = db.prepare("SELECT * FROM jokes").all()
-    reponse.json(jokes)
+    response.json(jokes)
 } )
+
+app.post('/jokes', function(request, response) {
+    console.log(request.body)
+    const setup = request.body.setup
+    const punchline = request.body.punchline
+
+    const newJoke = db.prepare(`INSERT INTO jokes (setup, punchline) VALUES (?,?)`).run(setup, punchline)
+
+    response.json(newJoke)
+})
 
 app.listen(9090, function () {
     console.log('The server is listening on PORT: 9090')
